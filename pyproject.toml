@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shiteng-rs485"
+version = "0.1.0"
+description = "与传输设备无关的湿腾 STX-W RS485 协议编解码库"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "holyful"}]
+keywords = ["shiteng", "rs485", "serial", "ventilation", "sans-io"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Operating System :: OS Independent",
+  "Topic :: Home Automation",
+]
+dependencies = []
+
+[project.optional-dependencies]
+serial = ["pyserial>=3.5,<4"]
+test = ["lupa>=2.0,<3"]
+dev = ["build>=1.2,<2"]
+
+[project.urls]
+Homepage = "https://github.com/holyful/shiteng-rs485"
+Repository = "https://github.com/holyful/shiteng-rs485"
+Issues = "https://github.com/holyful/shiteng-rs485/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]

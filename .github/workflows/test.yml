@@ -1,0 +1,45 @@
+name: 测试与构建
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.10', '3.12', '3.14']
+        include:
+          - os: windows-latest
+            python: '3.12'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install ".[serial,test,dev]"
+      - name: 确认 Lua 测试运行环境可用
+        run: python -c "from lupa import LuaRuntime; LuaRuntime()"
+      - run: python -m unittest discover -s tests -v
+      - run: python examples/offline.py
+      - run: python -m build
+  required-checks:
+    name: 必需检查
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检查全部测试结果
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+        run: test "$TEST_RESULT" = "success"
